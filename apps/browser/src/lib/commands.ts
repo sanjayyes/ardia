@@ -45,7 +45,7 @@ import { shareTab } from "../components/site/share";
 import { openProfileMenu } from "../components/ProfileIndicator";
 import { groupOf } from "../store/organize";
 import { isSmall, mainWindowFor, originalProfile } from "../store/small";
-import { closeLittleArdia, openInMainWindow, openLittleArdia } from "../components/littleArdia/actions";
+import { closeLittleArdia, openInMainWindow, openLittleArdia, openPeek } from "../components/littleArdia/actions";
 import { expectFocus, findFocus } from "./focusClaims";
 
 export function runCommand({ command, arg, windowId: requested }: CommandEvent) {
@@ -65,6 +65,15 @@ export function runCommand({ command, arg, windowId: requested }: CommandEvent) 
       return void openWindow({ incognito: true, profileId: originalProfile(s, s.windows[requested ?? ""]) });
     case "newLittleArdia":
       return void openLittleArdia();
+    case "openInPeek": {
+      const w = requested ? s.windows[requested] : undefined;
+      const t = w ? (w.activeTabIds?.[w.profileId] ?? w.tabIds[0]) : undefined;
+      const tab = t ? s.tabs[t] : undefined;
+      const url = arg ?? tab?.url;
+      const profileId = tab?.profileId ?? w?.profileId;
+      if (url) return void openPeek(url, profileId);
+      return void openPeek(undefined, profileId);
+    }
     case "toggleOpenLinksInLittleArdia":
       return s.updateSettings({ openLinksInLittleArdia: !s.settings.openLinksInLittleArdia });
     case "reopenClosedWindow":

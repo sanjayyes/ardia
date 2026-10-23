@@ -14,6 +14,12 @@ export function openLittleArdia(url?: string, profileId?: string, adoptId?: stri
   return id;
 }
 
+export function openPeek(url?: string, profileId?: string, adoptId?: string): string {
+  // Peek reuses Little Ardia's small window: a real Chrome tab with profile
+  // cookies, ⌘O to promote into a main tab, and Esc to close.
+  return openLittleArdia(url, profileId, adoptId);
+}
+
 const opensInLittleArdia = (url: string) => /^(https?|file):/i.test(url);
 
 export function openExternalUrls(given: string[]) {

@@ -12,6 +12,7 @@ export type BrowserCommand =
   | "newWindow"
   | "newIncognitoWindow"
   | "newLittleArdia"
+  | "openInPeek"
   | "toggleOpenLinksInLittleArdia"
   | "reopenClosedTab"
   | "reopenClosedWindow"

@@ -66,6 +66,10 @@ export type Settings = {
   openLinksInLittleArdia: boolean;
   littleArdiaSize: [number, number];
 
+  peekEnabled: boolean;
+  peekTrigger: "shift" | "alt" | "ctrl" | "none";
+  peekAutoFromPinned: boolean;
+
   chosen?: string[];
   inferred?: string[];
 };
@@ -114,6 +118,10 @@ export const DEFAULT_SETTINGS: Settings = {
   shortcuts: {},
   openLinksInLittleArdia: true,
   littleArdiaSize: [900, 640],
+
+  peekEnabled: true,
+  peekTrigger: "shift",
+  peekAutoFromPinned: true,
 };
 
 const NO_CUSTOM_ENGINES: CustomSearchEngine[] = [];
