@@ -45,6 +45,7 @@ export type OpenWindowRequest = {
   userGesture?: boolean;
   postBody?: boolean;
   profile?: string;
+  modifiers?: { shift?: boolean; alt?: boolean; ctrl?: boolean; meta?: boolean };
 };
 
 export type BlockedPopup = { id: string; url: string; origin: string };

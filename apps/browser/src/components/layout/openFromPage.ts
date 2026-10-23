@@ -6,7 +6,7 @@ import { isSmall, originalProfile, privateWindowProfile } from "../../store/smal
 import { openLinkInSplit, openSplitPane } from "./splitActions";
 import { openPeek } from "../littleArdia/actions";
 
-export function openFromPage({ url, adoptId, disposition, profile }: OpenWindowRequest, from: { windowId: string; profileId: string; tabId?: string }) {
+export function openFromPage({ url, adoptId, disposition, profile, modifiers }: OpenWindowRequest, from: { windowId: string; profileId: string; tabId?: string }) {
   const s = useBrowser.getState();
   const w = s.windows[from.windowId];
   if (!w) return;
@@ -28,7 +28,18 @@ export function openFromPage({ url, adoptId, disposition, profile }: OpenWindowR
     return void openWindow({ incognito: true, url, profileId });
   }
   if (disposition === "peek") {
-    return void openPeek(url, from.profileId, adoptId);
+    const trigger = s.settings.peekTrigger;
+    const mods = modifiers ?? {};
+    const matches =
+      trigger === "none" ? false :
+      trigger === "shift" ? !!mods.shift :
+      trigger === "alt" ? !!mods.alt :
+      trigger === "ctrl" ? (!!mods.ctrl || !!mods.meta) : false;
+    if (s.settings.peekEnabled && matches) {
+      return void openPeek(url, from.profileId, adoptId);
+    }
+    // peek disabled or trigger didn't match: open as a normal window
+    return void openWindow(w.incognito ? { incognito: true, url, profileId: originalProfile(s, w) } : { profileId: from.profileId, url, adoptId });
   }
   if (disposition === "window") {
     if (s.settings.peekAutoFromPinned && from.tabId && s.tabs[from.tabId]?.pinned) {

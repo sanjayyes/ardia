@@ -33,6 +33,7 @@ export type CreateWindowOptions = {
   tabIds?: string[];
   frame?: Frame | null;
   small?: boolean;
+  peek?: boolean;
   background?: boolean;
   chromeWindow?: string;
 };
@@ -137,6 +138,7 @@ export const createWindowsSlice: StateCreator<BrowserState, [], [], WindowsSlice
       ? incognitoProfileId(id, original)
       : (known ?? (small ? lastActiveProfile(s) : s.settings.defaultProfileId));
     const w = small ? smallWindow(id, profileId) : emptyWindow(id, profileId, !!o.incognito, o.frame ?? null);
+    if (o.peek && small) w.peek = true;
     if (original !== undefined) w.originalProfileId = original;
     if (o.chromeWindow && !small) w.chromeWindow = o.chromeWindow;
     let next = withWindow(s, w);

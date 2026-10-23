@@ -995,7 +995,7 @@
       if (!href || !/^https?:/i.test(href)) return;
       e.preventDefault();
       e.stopPropagation();
-      send("peek", { url: href });
+      send("peek", { url: href, shift: !!e.shiftKey, alt: !!e.altKey, ctrl: !!e.ctrlKey, meta: !!e.metaKey });
     },
     { capture: true },
   );

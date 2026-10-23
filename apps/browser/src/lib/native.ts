@@ -78,7 +78,16 @@ export function startNativeSync() {
 
   onWindowEvent((e) => {
     const s = store.getState();
-    if (e.type === "focus") s.setFocusedWindow(e.id);
+    if (e.type === "focus") {
+      s.setFocusedWindow(e.id);
+      // Close any open Peek when focus moves to another (non-peek) window.
+      const focused = s.windows[e.id];
+      if (!focused?.peek) {
+        for (const [id, w] of Object.entries(s.windows)) {
+          if (w.peek && id !== e.id) s.closeWindow(id);
+        }
+      }
+    }
     if (e.type === "frame") s.setWindowFrame(e.id, e.frame);
     if (e.type === "close") {
       if (quitting) return;

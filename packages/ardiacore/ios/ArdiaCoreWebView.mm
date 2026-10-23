@@ -1914,7 +1914,9 @@ void ArdiaCoreWebViewsSetFieldTiming(BOOL on) {
       [self emit:@"pageMessage" payload:@{@"kind" : @"scroll", @"data" : @{@"state" : state}}];
   } else if ([kind isEqualToString:@"peek"] && main) {
     NSString *url = Text(dict, @"url", 8192);
-    if (url.length) [self emit:@"openWindow" payload:@{@"url" : url, @"disposition" : @"peek", @"userGesture" : @YES}];
+    if (url.length) [self emit:@"openWindow" payload:@{@"url" : url, @"disposition" : @"peek", @"userGesture" : @YES,
+      @"shift" : @([dict[@"shift"] boolValue]), @"alt" : @([dict[@"alt"] boolValue]),
+      @"ctrl" : @([dict[@"ctrl"] boolValue]), @"meta" : @([dict[@"meta"] boolValue])}];
   } else if ([kind isEqualToString:@"media"] && dict) {
     NSString *mediaFrame = Text(dict, @"frame", 64);
     if (!mediaFrame) return;

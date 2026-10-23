@@ -3,10 +3,10 @@ import { WindowBackdrop } from "@ardia/shaders";
 import { ContextMenuArea, FadeLabel, setTrafficLightsCenter, Symbol, WindowDragRegion } from "@ardia/shell";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "../../lib/theme";
 import { useBrowser } from "../../store/browser";
 import { useActiveTab, useTabLive, useWindowId, useWindowUi } from "../../store/hooks";
 import { usePageProgress } from "../../store/pageProgress";
+import { useTheme } from "../../lib/theme";
 import type { Tab } from "../../store/types";
 import { CommandPanel } from "../CommandPanel";
 import { ContentCard } from "../ContentCard";
@@ -16,7 +16,9 @@ import { setUrlAnchor } from "../layout/windowLayout";
 import { showUrlBarMenu } from "../omnibox/paste";
 import { Favicon, IconButton, useHover } from "../primitives";
 import { copyPageUrl } from "../site/selection";
-import { openInMainWindow } from "./actions";
+import { closeLittleArdia, openInMainWindow } from "./actions";
+import { openSplitPane } from "../layout/splitActions";
+import { mainWindowFor } from "../../store/small";
 
 const SMALL_BAR_HEIGHT = 38;
 const MID = SMALL_BAR_HEIGHT / 2;
@@ -63,6 +65,18 @@ function LittleArdiaBar() {
     copiedTimer.current = setTimeout(() => setCopied(false), 1400);
   };
 
+  const split = () => {
+    if (!tab?.url) return;
+    const target = mainWindowFor(useBrowser.getState(), tab.profileId);
+    if (target) {
+      openSplitPane(target, { url: tab.url, side: "right" });
+      closeLittleArdia(windowId);
+    } else {
+      // no main window: promote to a tab instead
+      openInMainWindow(windowId);
+    }
+  };
+
   return (
     <View style={{ height: SMALL_BAR_HEIGHT }}>
       <WindowDragRegion style={StyleSheet.absoluteFill} />
@@ -72,6 +86,7 @@ function LittleArdiaBar() {
       <View style={{ position: "absolute", right: INSET, top: MID - BUTTON / 2, flexDirection: "row", gap: 2 }}>
         <IconButton icon={copied ? "checkmark" : "link"} size={14} box={BUTTON} radius={7} disabled={!tab?.url} tooltip="Copy Link (⇧⌘C)" onPress={copy} />
         <IconButton icon="arrow.up.left.and.arrow.down.right" size={13} box={BUTTON} radius={7} tooltip="Open in Ardia (⌘O)" onPress={() => openInMainWindow(windowId)} />
+        <IconButton icon="rectangle.split.2x1" size={13} box={BUTTON} radius={7} tooltip="Open in Split" onPress={split} disabled={!tab?.url} />
       </View>
     </View>
   );
