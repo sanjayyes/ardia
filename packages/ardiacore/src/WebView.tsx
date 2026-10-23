@@ -36,7 +36,7 @@ export type NowPlaying = {
 export type MediaCommand = "play" | "pause" | "toggle" | "next" | "previous" | "seekBy" | "seekTo" | "stop";
 export type MediaAccess = { camera: boolean; microphone: boolean; screen: boolean };
 
-export type OpenDisposition = "foreground" | "background" | "window" | "popup" | "incognito" | "current" | "split";
+export type OpenDisposition = "foreground" | "background" | "window" | "popup" | "incognito" | "current" | "split" | "peek";
 
 export type OpenWindowRequest = {
   url: string;

@@ -4,6 +4,7 @@ import { useBrowser } from "../../store/browser";
 import { engineProfile } from "../../store/model";
 import { isSmall, originalProfile, privateWindowProfile } from "../../store/small";
 import { openLinkInSplit, openSplitPane } from "./splitActions";
+import { openPeek } from "../littleArdia/actions";
 
 export function openFromPage({ url, adoptId, disposition, profile }: OpenWindowRequest, from: { windowId: string; profileId: string; tabId?: string }) {
   const s = useBrowser.getState();
@@ -26,7 +27,13 @@ export function openFromPage({ url, adoptId, disposition, profile }: OpenWindowR
     if (adoptId?.startsWith("tab:")) return void openWindow({ incognito: true, url, adoptId, profileId });
     return void openWindow({ incognito: true, url, profileId });
   }
+  if (disposition === "peek") {
+    return void openPeek(url, from.profileId, adoptId);
+  }
   if (disposition === "window") {
+    if (s.settings.peekAutoFromPinned && from.tabId && s.tabs[from.tabId]?.pinned) {
+      return void openPeek(url, from.profileId, adoptId);
+    }
     return void openWindow(w.incognito ? { incognito: true, url, profileId: originalProfile(s, w) } : { profileId: from.profileId, url, adoptId });
   }
   const background = disposition === "background" || from.profileId !== w.profileId;

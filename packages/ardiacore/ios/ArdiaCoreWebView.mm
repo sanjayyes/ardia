@@ -1912,6 +1912,9 @@ void ArdiaCoreWebViewsSetFieldTiming(BOOL on) {
     NSString *state = Text(dict, @"state", 8);
     if ([@[ @"down", @"up", @"top" ] containsObject:state ?: @""])
       [self emit:@"pageMessage" payload:@{@"kind" : @"scroll", @"data" : @{@"state" : state}}];
+  } else if ([kind isEqualToString:@"peek"] && main) {
+    NSString *url = Text(dict, @"url", 8192);
+    if (url.length) [self emit:@"openWindow" payload:@{@"url" : url, @"disposition" : @"peek", @"userGesture" : @YES}];
   } else if ([kind isEqualToString:@"media"] && dict) {
     NSString *mediaFrame = Text(dict, @"frame", 64);
     if (!mediaFrame) return;

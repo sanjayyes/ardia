@@ -984,5 +984,21 @@
   );
   addEventListener("resize", () => direction.resized(innerHeight, performance.now()));
 
+  // Shift+click a link opens it in Peek (Arc-style).
+  addEventListener(
+    "click",
+    (e) => {
+      if (!e.shiftKey || e.defaultPrevented) return;
+      const a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a) return;
+      const href = a.href;
+      if (!href || !/^https?:/i.test(href)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      send("peek", { url: href });
+    },
+    { capture: true },
+  );
+
   return receive;
 })
