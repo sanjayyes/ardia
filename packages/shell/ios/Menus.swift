@@ -347,6 +347,7 @@ enum MainMenu {
       cmd("New Window", "newWindow", "n"),
       cmd("New Incognito Window", "newIncognitoWindow", "n", [.command, .shift]),
       cmd("New Little Ardia Window", "newLittleArdia", "n", [.command, .option]),
+      cmd("Open in Peek", "openInPeek"),
       cmd("Open Links from Other Apps in Main Window", "toggleOpenLinksInLittleArdia"),
       cmd("Reopen Closed Tab", "reopenClosedTab", "t", [.command, .shift]),
       cmd("Reopen Closed Window", "reopenClosedWindow"),
