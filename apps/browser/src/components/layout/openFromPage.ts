@@ -38,8 +38,12 @@ export function openFromPage({ url, adoptId, disposition, profile, modifiers }: 
     if (s.settings.peekEnabled && matches) {
       return void openPeek(url, from.profileId, adoptId);
     }
-    // peek disabled or trigger didn't match: open as a normal window
-    return void openWindow(w.incognito ? { incognito: true, url, profileId: originalProfile(s, w) } : { profileId: from.profileId, url, adoptId });
+    // peek disabled or trigger didn't match: open as a normal tab/window
+    if (w.incognito) {
+      return void openWindow({ incognito: true, url, profileId: originalProfile(s, w) });
+    }
+    s.newTab(w.id, { url, adoptId, openerId: from.tabId, profileId: from.profileId, background: true });
+    return;
   }
   if (disposition === "window") {
     if (s.settings.peekAutoFromPinned && from.tabId && s.tabs[from.tabId]?.pinned) {

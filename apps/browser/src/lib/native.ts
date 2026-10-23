@@ -74,6 +74,12 @@ export function startNativeSync() {
       quitting = false;
       resumePersistence();
     }
+    if (e.type === "resignActive") {
+      const s2 = store.getState();
+      for (const [id, w] of Object.entries(s2.windows)) {
+        if (w.peek) s2.closeWindow(id);
+      }
+    }
   });
 
   onWindowEvent((e) => {
@@ -83,8 +89,9 @@ export function startNativeSync() {
       // Close any open Peek when focus moves to another (non-peek) window.
       const focused = s.windows[e.id];
       if (!focused?.peek) {
-        for (const [id, w] of Object.entries(s.windows)) {
-          if (w.peek && id !== e.id) s.closeWindow(id);
+        const current = store.getState();
+        for (const [id, w] of Object.entries(current.windows)) {
+          if (w.peek && id !== e.id) current.closeWindow(id);
         }
       }
     }

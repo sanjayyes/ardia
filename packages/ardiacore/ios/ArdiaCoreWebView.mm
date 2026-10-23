@@ -1915,8 +1915,10 @@ void ArdiaCoreWebViewsSetFieldTiming(BOOL on) {
   } else if ([kind isEqualToString:@"peek"] && main) {
     NSString *url = Text(dict, @"url", 8192);
     if (url.length) [self emit:@"openWindow" payload:@{@"url" : url, @"disposition" : @"peek", @"userGesture" : @YES,
-      @"shift" : @([dict[@"shift"] boolValue]), @"alt" : @([dict[@"alt"] boolValue]),
-      @"ctrl" : @([dict[@"ctrl"] boolValue]), @"meta" : @([dict[@"meta"] boolValue])}];
+      @"shift" : @((dict ? [dict[@"shift"] boolValue] : NO)),
+      @"alt" : @((dict ? [dict[@"alt"] boolValue] : NO)),
+      @"ctrl" : @((dict ? [dict[@"ctrl"] boolValue] : NO)),
+      @"meta" : @((dict ? [dict[@"meta"] boolValue] : NO))}];
   } else if ([kind isEqualToString:@"media"] && dict) {
     NSString *mediaFrame = Text(dict, @"frame", 64);
     if (!mediaFrame) return;

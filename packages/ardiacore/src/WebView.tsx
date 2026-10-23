@@ -46,10 +46,6 @@ export type OpenWindowRequest = {
   postBody?: boolean;
   profile?: string;
   modifiers?: { shift?: boolean; alt?: boolean; ctrl?: boolean; meta?: boolean };
-  shift?: boolean;
-  alt?: boolean;
-  ctrl?: boolean;
-  meta?: boolean;
 };
 
 export type BlockedPopup = { id: string; url: string; origin: string };
@@ -287,7 +283,7 @@ const unwrap: { [K in Handlers]: (e: NativeEvents[K]) => Parameters<NonNullable<
   onMedia: (e) => [e],
   onNowPlaying: (e) => [e.state],
   onMediaAccess: (e) => [e],
-  onOpenWindow: (e) => [{ ...e, url: toAppUrl(e.url), modifiers: { shift: !!e.shift, alt: !!e.alt, ctrl: !!e.ctrl, meta: !!e.meta } }],
+  onOpenWindow: (e) => [{ ...e, url: toAppUrl(e.url), modifiers: { shift: !!(e as { shift?: boolean }).shift, alt: !!(e as { alt?: boolean }).alt, ctrl: !!(e as { ctrl?: boolean }).ctrl, meta: !!(e as { meta?: boolean }).meta } }],
   onPopupBlocked: (e) => [{ ...e, url: toAppUrl(e.url) }],
   onFindResult: (e) => [e],
   onFullscreen: (e) => [e.fullscreen],

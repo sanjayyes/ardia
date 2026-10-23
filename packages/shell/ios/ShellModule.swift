@@ -262,6 +262,10 @@ public class ShellModule: Module {
           self?.sendEvent("onAppEvent", ["type": "appearance", "dark": ShellModule.isDark])
         }
         self?.observeForSidebar()
+        let resignActive = NotificationCenter.default.addObserver(
+          forName: NSApplication.didResignActiveNotification, object: nil, queue: .main
+        ) { _ in self?.sendEvent("onAppEvent", ["type": "resignActive"]) }
+        self?.sidebarObservers.append((NotificationCenter.default, resignActive))
         let quitCancelled = NotificationCenter.default.addObserver(
           forName: Notification.Name("ArdiaCoreQuitCancelled"), object: nil, queue: .main
         ) { _ in self?.sendEvent("onAppEvent", ["type": "quitCancelled"]) }

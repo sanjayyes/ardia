@@ -7,6 +7,7 @@ import { activeTabId } from "../../store/model";
 import { isSmall, lastActiveProfile, mainWindowFor } from "../../store/small";
 
 const store = () => useBrowser.getState();
+export { store };
 
 export function openLittleArdia(url?: string, profileId?: string, adoptId?: string): string {
   const id = store().createWindow({ small: true, url, profileId, adoptId });

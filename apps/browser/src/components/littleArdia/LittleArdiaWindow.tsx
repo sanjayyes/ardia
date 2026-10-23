@@ -16,7 +16,7 @@ import { setUrlAnchor } from "../layout/windowLayout";
 import { showUrlBarMenu } from "../omnibox/paste";
 import { Favicon, IconButton, useHover } from "../primitives";
 import { copyPageUrl } from "../site/selection";
-import { closeLittleArdia, openInMainWindow } from "./actions";
+import { closeLittleArdia, openInMainWindow, store as storeHelper } from "./actions";
 import { openSplitPane } from "../layout/splitActions";
 import { mainWindowFor } from "../../store/small";
 
@@ -67,7 +67,7 @@ function LittleArdiaBar() {
 
   const split = () => {
     if (!tab?.url) return;
-    const target = mainWindowFor(useBrowser.getState(), tab.profileId);
+    const target = mainWindowFor(storeHelper(), tab.profileId);
     if (target) {
       openSplitPane(target, { url: tab.url, side: "right" });
       closeLittleArdia(windowId);

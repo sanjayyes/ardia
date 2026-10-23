@@ -45,6 +45,9 @@ export const SYNCED_SETTINGS = [
   "appearance",
   "addressBar",
   "shortcuts",
+  "peekEnabled",
+  "peekTrigger",
+  "peekAutoFromPinned",
 ] as const satisfies readonly (keyof Settings)[];
 
 export const settingsAdapter: Adapter = {
